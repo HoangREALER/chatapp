@@ -335,242 +335,239 @@ public class ChatGUI {
 
     }
 
-//    public class ChatRoom extends Thread {
-//
-//        private Socket connect;
-//        private ObjectOutputStream outPeer;
-//        private ObjectInputStream inPeer;
-//        private boolean continueSendFile = true, finishReceive = false;
-//        private int sizeOfSend = 0, sizeOfData = 0, sizeFile = 0, sizeReceive = 0;
-//        private String nameFileReceive = "";
-//        private InputStream inFileSend;
-////        private FileData dataFile;
-//
-//        public ChatRoom(Socket connection, String name, String guest)
-//                throws Exception {
-//            connect = new Socket();
-//            connect = connection;
-//            guest_name = guest;
-//        }
-//
-//        @Override
-//        public void run() {
-//            super.run();
-//            OutputStream out = null;
-//            while (!isStop) {
-//                try {
-//                    // Get data from another peer
-//                    inPeer = new ObjectInputStream(connect.getInputStream());
-//                    Object obj = inPeer.readObject();
-//
-//                    if (obj instanceof String) {
-//                        String msgObj = obj.toString();
-//
-//                        if (msgObj.equals(Tags.CHAT_CLOSE_TAG)) {
-//                            isStop = true;
-//
-//                            JOptionPane.showMessageDialog(
-//                                    fmChat, guest_name + " may be close chat with you!");
-//
-//                            connect.close();
-//                            break;
-//                        }
-//
-//                        if (Decode.checkFile(msgObj)) {
-//                            isReceiveFile = true;
-//                            nameFileReceive = msgObj.substring(10,
-//                                    msgObj.length() - 11);
-//
-//                            int result = JOptionPane.showConfirmDialog(
-//                                    fmChat, guest_name + " send file " + nameFileReceive
-//                                            + " for you", null,  JOptionPane.YES_NO_OPTION
-//                            );
-//
-//                            if (result == 0) {
-//                                File fileReceive = new File(URL_DIR + TEMP
-//                                        + "/" + nameFileReceive);
-//                                if (!fileReceive.exists()) {
-//                                    fileReceive.createNewFile();
-//                                }
-//                                String msg = Tags.FILE_REQ_ACK_OPEN_TAG
-//                                        + Integer.toBinaryString(portServer)
-//                                        + Tags.FILE_REQ_ACK_CLOSE_TAG;
-//                                sendMessage(msg);
-//                            } else {
-//                                sendMessage(Tags.FILE_REQ_NOACK_TAG);
-//                            }
-//                        }
-//
-//                        if (Decode.checkFeedBack(msgObj)) {
-//                            new Thread(new Runnable() {
-//                                public void run() {
-//                                    try {
-//                                        sendMessage(Tags.FILE_DATA_BEGIN_TAG);
-//                                        updateChat("you are sending file:	" + file_name);
-//                                        isSendFile = false;
-//                                        sendFile(textPath.getText());
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }).start();
-//                        } else if (msgObj.equals(Tags.FILE_REQ_NOACK_TAG)) {
-//                            JOptionPane.showMessageDialog(
-//                                    fmChat, guest_name + " wantn't receive file");
-//                        } else if (msgObj.equals(Tags.FILE_DATA_BEGIN_TAG)) {
-//                            finishReceive = false;
-//                            lbReceiving.setVisible(true);
-//                            out = new FileOutputStream(URL_DIR + TEMP
-//                                    + nameFileReceive);
-//                        } else if (msgObj.equals(Tags.FILE_DATA_CLOSE_TAG)) {
-//                            updateChat("You receive file:	" + nameFileReceive + " with size " + sizeReceive + " KB");
-//                            sizeReceive = 0;
-//                            out.flush();
-//                            out.close();
-//                            lbReceiving.setVisible(false);
-//                            new Thread(new Runnable() {
-//
-//                                @Override
-//                                public void run() {
-//                                    showSaveFile();
-//                                }
-//                            }).start();
-//                            finishReceive = true;
-//                        } else {
-//                            String message = Decode.getTextMessage(msgObj);
-//                            updateChat("[" + guest_name + "] : " + message);
-//                        }
-//                    } else if (obj instanceof FileData) {
-//                        FileData data = (FileData) obj;
-//                        ++sizeReceive;
-//                        out.write(data.data);
-//                    }
-//                } catch (Exception e) {
-//                    File fileTemp = new File(URL_DIR + TEMP + nameFileReceive);
-//                    if (fileTemp.exists() && !finishReceive) {
-//                        fileTemp.delete();
-//                    }
-//                }
-//            }
-//        }
-//
-//        private void getData(String path) throws Exception {
-//            File fileData = new File(path);
-//            if (fileData.exists()) {
-//                sizeOfSend = 0;
-//                dataFile = new FileData();
-//                sizeFile = (int) fileData.length();
-//                // sizeOfData = sizeFile % 1024 == 0 ? (int) (fileData.length() / 1024) : (int) (fileData.length() / 1024) + 1;
-//                sizeOfData =  (int) (fileData.length() / 1024) + 1;
-//                lbSending.setVisible(true);
-//                progressSendFile.setVisible(true);
-//                progressSendFile.setValue(0);
-//                inFileSend = new FileInputStream(fileData);
-//            }
-//        }
-//
-//        public void sendFile(String path) throws Exception {
-//            getData(path);
-//            lbSending.setText("Sending ...");
-//            do {
-//                if (continueSendFile) {
-//                    continueSendFile = false;
-//                    new Thread(new Runnable() {
-//
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                inFileSend.read(dataFile.data);
-//                                sendMessage(dataFile);
-//                                sizeOfSend++;
-//                                if (sizeOfSend == sizeOfData - 1) {
-//                                    int size = sizeFile - sizeOfSend * 1024;
-//                                    dataFile = new FileData(size);
-//                                }
-//                                progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
-//                                System.out.println(sizeOfSend);
-//                                System.out.println(sizeOfData);
-//                                System.out.println("");
-//                                if (sizeOfSend >= sizeOfData) {
-//                                    inFileSend.close();
-//                                    isSendFile = true;
-//                                    sendMessage(Tags.FILE_DATA_CLOSE_TAG);
-//                                    progressSendFile.setVisible(false);
-//                                    lbSending.setVisible(false);
-//                                    isSendFile = false;
-//                                    textPath.setText("");
-//                                    updateChat("YOU ARE SEND FILE COMPLETE !!!");
-//                                }
-//                                continueSendFile = true;
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
-//                    Thread.sleep(10);
-//                }
-//            } while (sizeOfSend < sizeOfData);
-//        }
-//
-//        private void showSaveFile() {
-//            while (true) {
-//                JFileChooser fileChooser = new JFileChooser();
-//                fileChooser.setCurrentDirectory(new File(System
-//                        .getProperty("user.home")));
-//                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//                int result = fileChooser.showSaveDialog(fmChat);
-//                if (result == JFileChooser.APPROVE_OPTION) {
-//                    File file = new File(fileChooser.getSelectedFile()
-//                            .getAbsolutePath() + "/" + nameFileReceive );
-//                    if (!file.exists()) {
-//                        try {
-//                            file.createNewFile();
-//                            Thread.sleep(1000);
-//                            InputStream input = new FileInputStream(URL_DIR
-//                                    + TEMP + nameFileReceive);
-//                            OutputStream output = new FileOutputStream(
-//                                    file.getAbsolutePath());
-//                            copyFileReceive(input, output, URL_DIR + TEMP
-//                                    + nameFileReceive);
-//                        } catch (Exception e) {
-//                            JOptionPane.showMessageDialog(fmChat, "Your file receive has error!!!");
-//                        }
-//                        break;
-//                    } else {
-//                        int resultContinue = JOptionPane.showConfirmDialog(
-//                                fmChat, "File is exists. You want save file?", null,
-//                                JOptionPane.YES_NO_OPTION
-//                        );
-//                        if (resultContinue == 0)
-//                            continue;
-//                        else
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//
-//        public synchronized void sendMessage(Object obj) throws Exception {
-//            outPeer = new ObjectOutputStream(connect.getOutputStream());
-//            if (obj instanceof String) {
-//                String message = obj.toString();
-//                outPeer.writeObject(message);
-//                outPeer.flush();
-//                if (isReceiveFile)
-//                    isReceiveFile = false;
-//            } else if (obj instanceof FileData) {
-//                outPeer.writeObject(obj);
-//                outPeer.flush();
-//            }
-//        }
-//
-//        public void stopChat() {
-//            try {
-//                connect.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    public class ChatRoom extends Thread {
+
+        private Peer peer;
+        private boolean continueSendFile = true, finishReceive = false;
+        private int sizeOfSend = 0, sizeOfData = 0, sizeFile = 0, sizeReceive = 0;
+        private String nameFileReceive = "";
+        private InputStream inFileSend;
+//        private FileData dataFile;
+
+        public ChatRoom(Peer peer, String name, String guest)
+                throws Exception {
+            this.peer = peer;
+            guest_name = guest;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            OutputStream out = null;
+            while (!isStop) {
+                try {
+                    // Get data from another peer
+                    inPeer = new ObjectInputStream(connect.getInputStream());
+                    Object obj = inPeer.readObject();
+
+                    if (obj instanceof String) {
+                        String msgObj = obj.toString();
+
+                        if (msgObj.equals(Tags.CHAT_CLOSE_TAG)) {
+                            isStop = true;
+
+                            JOptionPane.showMessageDialog(
+                                    fmChat, guest_name + " may be close chat with you!");
+
+                            connect.close();
+                            break;
+                        }
+
+                        if (Decode.checkFile(msgObj)) {
+                            isReceiveFile = true;
+                            nameFileReceive = msgObj.substring(10,
+                                    msgObj.length() - 11);
+
+                            int result = JOptionPane.showConfirmDialog(
+                                    fmChat, guest_name + " send file " + nameFileReceive
+                                            + " for you", null,  JOptionPane.YES_NO_OPTION
+                            );
+
+                            if (result == 0) {
+                                File fileReceive = new File(URL_DIR + TEMP
+                                        + "/" + nameFileReceive);
+                                if (!fileReceive.exists()) {
+                                    fileReceive.createNewFile();
+                                }
+                                String msg = Tags.FILE_REQ_ACK_OPEN_TAG
+                                        + Integer.toBinaryString(portServer)
+                                        + Tags.FILE_REQ_ACK_CLOSE_TAG;
+                                sendMessage(msg);
+                            } else {
+                                sendMessage(Tags.FILE_REQ_NOACK_TAG);
+                            }
+                        }
+
+                        if (Decode.checkFeedBack(msgObj)) {
+                            new Thread(new Runnable() {
+                                public void run() {
+                                    try {
+                                        sendMessage(Tags.FILE_DATA_BEGIN_TAG);
+                                        updateChat("you are sending file:	" + file_name);
+                                        isSendFile = false;
+                                        sendFile(textPath.getText());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        } else if (msgObj.equals(Tags.FILE_REQ_NOACK_TAG)) {
+                            JOptionPane.showMessageDialog(
+                                    fmChat, guest_name + " wantn't receive file");
+                        } else if (msgObj.equals(Tags.FILE_DATA_BEGIN_TAG)) {
+                            finishReceive = false;
+                            lbReceiving.setVisible(true);
+                            out = new FileOutputStream(URL_DIR + TEMP
+                                    + nameFileReceive);
+                        } else if (msgObj.equals(Tags.FILE_DATA_CLOSE_TAG)) {
+                            updateChat("You receive file:	" + nameFileReceive + " with size " + sizeReceive + " KB");
+                            sizeReceive = 0;
+                            out.flush();
+                            out.close();
+                            lbReceiving.setVisible(false);
+                            new Thread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    showSaveFile();
+                                }
+                            }).start();
+                            finishReceive = true;
+                        } else {
+                            String message = Decode.getTextMessage(msgObj);
+                            updateChat("[" + guest_name + "] : " + message);
+                        }
+                    } else if (obj instanceof FileData) {
+                        FileData data = (FileData) obj;
+                        ++sizeReceive;
+                        out.write(data.data);
+                    }
+                } catch (Exception e) {
+                    File fileTemp = new File(URL_DIR + TEMP + nameFileReceive);
+                    if (fileTemp.exists() && !finishReceive) {
+                        fileTemp.delete();
+                    }
+                }
+            }
+        }
+
+        private void getData(String path) throws Exception {
+            File fileData = new File(path);
+            if (fileData.exists()) {
+                sizeOfSend = 0;
+                dataFile = new FileData();
+                sizeFile = (int) fileData.length();
+                // sizeOfData = sizeFile % 1024 == 0 ? (int) (fileData.length() / 1024) : (int) (fileData.length() / 1024) + 1;
+                sizeOfData =  (int) (fileData.length() / 1024) + 1;
+                lbSending.setVisible(true);
+                progressSendFile.setVisible(true);
+                progressSendFile.setValue(0);
+                inFileSend = new FileInputStream(fileData);
+            }
+        }
+
+        public void sendFile(String path) throws Exception {
+            getData(path);
+            lbSending.setText("Sending ...");
+            do {
+                if (continueSendFile) {
+                    continueSendFile = false;
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                inFileSend.read(dataFile.data);
+                                sendMessage(dataFile);
+                                sizeOfSend++;
+                                if (sizeOfSend == sizeOfData - 1) {
+                                    int size = sizeFile - sizeOfSend * 1024;
+                                    dataFile = new FileData(size);
+                                }
+                                progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
+                                System.out.println(sizeOfSend);
+                                System.out.println(sizeOfData);
+                                System.out.println("");
+                                if (sizeOfSend >= sizeOfData) {
+                                    inFileSend.close();
+                                    isSendFile = true;
+                                    sendMessage(Tags.FILE_DATA_CLOSE_TAG);
+                                    progressSendFile.setVisible(false);
+                                    lbSending.setVisible(false);
+                                    isSendFile = false;
+                                    textPath.setText("");
+                                    updateChat("YOU ARE SEND FILE COMPLETE !!!");
+                                }
+                                continueSendFile = true;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                    Thread.sleep(10);
+                }
+            } while (sizeOfSend < sizeOfData);
+        }
+
+        private void showSaveFile() {
+            while (true) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System
+                        .getProperty("user.home")));
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fileChooser.showSaveDialog(fmChat);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = new File(fileChooser.getSelectedFile()
+                            .getAbsolutePath() + "/" + nameFileReceive );
+                    if (!file.exists()) {
+                        try {
+                            file.createNewFile();
+                            Thread.sleep(1000);
+                            InputStream input = new FileInputStream(URL_DIR
+                                    + TEMP + nameFileReceive);
+                            OutputStream output = new FileOutputStream(
+                                    file.getAbsolutePath());
+                            copyFileReceive(input, output, URL_DIR + TEMP
+                                    + nameFileReceive);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(fmChat, "Your file receive has error!!!");
+                        }
+                        break;
+                    } else {
+                        int resultContinue = JOptionPane.showConfirmDialog(
+                                fmChat, "File is exists. You want save file?", null,
+                                JOptionPane.YES_NO_OPTION
+                        );
+                        if (resultContinue == 0)
+                            continue;
+                        else
+                            break;
+                    }
+                }
+            }
+        }
+
+        public synchronized void sendMessage(Object obj) throws Exception {
+            outPeer = new ObjectOutputStream(connect.getOutputStream());
+            if (obj instanceof String) {
+                String message = obj.toString();
+                outPeer.writeObject(message);
+                outPeer.flush();
+                if (isReceiveFile)
+                    isReceiveFile = false;
+            } else if (obj instanceof FileData) {
+                outPeer.writeObject(obj);
+                outPeer.flush();
+            }
+        }
+
+        public void stopChat() {
+            try {
+                connect.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
