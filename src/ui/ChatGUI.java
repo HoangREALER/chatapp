@@ -65,11 +65,11 @@ public class ChatGUI {
         initializeProgressBar();
     }
 
-    public ChatGUI(String user, String guest, Socket socket, int port, int a) throws Exception {
-        username = user;
+    public ChatGUI(Peer peer, String guest, Socket socket, int a) throws Exception {
+        username = peer.username;
         guest_name = guest;
         socketChat = socket;
-        this.portServer = port;
+        this.portServer = Integer.valueOf(peer.peerPort);
 
         initializeFrame();
         initializePanel();
