@@ -14,8 +14,8 @@ import java.util.Set;
 
 public class Peer {
 
-    private final String host;
-    private final int host_port;
+    private final String host = "localhost";
+    private final int host_port = 5000;
     public String username = null;
     public String peerPort = null;
     private int peer_id = -1;
@@ -25,10 +25,10 @@ public class Peer {
     private PeerServerThread peerServerThread;
     private Client client;
 
-    public Peer (String host, int host_port, String directoryPath) {
+    public Peer (String username, String port, String directoryPath) {
         // set host and port
-        this.host = host;
-        this.host_port = host_port;
+        this.username = username;
+        this.peerPort = port;
         this.directoryPath = directoryPath;
         this.client = new Client(this.host, this.host_port, this);
     }

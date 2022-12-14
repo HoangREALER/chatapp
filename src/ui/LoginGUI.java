@@ -1,5 +1,7 @@
 package ui;
 
+import Peer.Peer;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -119,7 +121,6 @@ public class LoginGUI extends JFrame {
 
         jframe.setContentPane(new JPanel() {
             BufferedImage bufferedImage = ImageIO.read(this.getClass().getResource("background.jpg"));
-
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(bufferedImage, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -132,9 +133,17 @@ public class LoginGUI extends JFrame {
         //submit button action listener
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String data = "Username: " + username.getText();
-                data += "\n" + "Port: " + port.getText();
-                JOptionPane.showMessageDialog(null, data);
+                try {
+                    if (validateport(port.getText()) && validateUsername(username.getText())) {
+                        Peer peer = new Peer(username.getText(),port.getText(), "/Users/hoang/IdeaProjects/ChatAppAssignment1/testfolder/peer1");
+                        jframe.dispose();
+                        new MenuGUI();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid input(s)");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid input(s)");
+                }
             }
         });
 
@@ -259,6 +268,7 @@ public class LoginGUI extends JFrame {
         String regExp = "^\\S*$";
         Pattern pattern = Pattern.compile(regExp);
         return pattern.matcher(mail).matches();
+
     }
 
     private boolean validateport(String text) {
@@ -333,10 +343,14 @@ public class LoginGUI extends JFrame {
     }
 
     public static void main(String args[]) {
-        try {
-            new LoginGUI();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new LoginGUI();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
