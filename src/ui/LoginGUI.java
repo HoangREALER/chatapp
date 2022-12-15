@@ -135,9 +135,10 @@ public class LoginGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (validateport(port.getText()) && validateUsername(username.getText())) {
-                        Peer peer = new Peer(username.getText(),port.getText(), "/Users/hoang/IdeaProjects/ChatAppAssignment1/testfolder/peer1");
+                        Peer peer = new Peer(username.getText(), port.getText(), "/Users/hoang/IdeaProjects/ChatAppAssignment1/testfolder/peer2");
+                        peer.clientAddUser();
                         jframe.dispose();
-                        new MenuGUI();
+                        new MenuGUI(peer);
                     } else {
                         JOptionPane.showMessageDialog(null, "Invalid input(s)");
                     }

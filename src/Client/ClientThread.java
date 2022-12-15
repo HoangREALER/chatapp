@@ -43,8 +43,8 @@ public class ClientThread extends Thread {
                 if (json.containsKey("file"))
                     response = json.getJsonArray("file").toString();
             } else if (json.containsKey("add") && json.getString("add").equals("success")) {
-                if (json.containsKey("user"))
-                    response = json.get("user").toString();
+                if (json.containsKey("peer"))
+                    response = json.get("peer").toString();
                 if (json.containsKey("file"))
                     response = json.get("file").toString();
             } else {

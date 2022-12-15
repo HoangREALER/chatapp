@@ -57,8 +57,6 @@ public class userThread extends Thread {
                                 filesInfo.forEach(file -> {
                                     JsonArrayBuilder peerInfo = Json.createArrayBuilder();
                                     file.getPeerId().forEach(peer_id -> {
-                                        String port;
-                                        String host;
                                         User user = users.stream()
                                                 .filter(u -> u.getId() == peer_id)
                                                 .findFirst().orElse(null);
@@ -122,7 +120,7 @@ public class userThread extends Thread {
                                 if (id != -1) {
                                     Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()
                                             .add("add", "success")
-                                            .add("user", id)
+                                            .add("peer", id)
                                             .build());
                                 } else {
                                     Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()

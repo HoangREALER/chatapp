@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ui.MenuGUI">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="15" left="15" bottom="15" right="15"/>
     <constraints>
       <xy x="20" y="20" width="839" height="459"/>
@@ -10,7 +10,7 @@
     <children>
       <component id="46215" class="javax.swing.JLabel">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="User"/>
@@ -18,15 +18,15 @@
       </component>
       <component id="1879e" class="javax.swing.JLabel">
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Files"/>
         </properties>
       </component>
-      <scrollpane id="bd24">
+      <scrollpane id="bd24" binding="userListScroll">
         <constraints>
-          <grid row="1" column="0" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <minimum-size width="300" height="-1"/>
           </grid>
         </constraints>
@@ -36,18 +36,14 @@
           <component id="b9e34" class="javax.swing.JList" binding="listUsernames">
             <constraints/>
             <properties>
-              <model>
-                <item value="username1"/>
-                <item value="username2"/>
-                <item value="username3"/>
-              </model>
+              <model/>
             </properties>
           </component>
         </children>
       </scrollpane>
-      <scrollpane id="9be6">
+      <scrollpane id="9be6" binding="fileListScroll">
         <constraints>
-          <grid row="1" column="1" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <minimum-size width="300" height="-1"/>
           </grid>
         </constraints>
@@ -57,11 +53,7 @@
           <component id="b2d37" class="javax.swing.JList" binding="listFiles">
             <constraints/>
             <properties>
-              <model>
-                <item value="Filename1"/>
-                <item value="Filename2"/>
-                <item value="Filename3"/>
-              </model>
+              <model/>
             </properties>
           </component>
         </children>
@@ -69,7 +61,7 @@
       <grid id="30b42" binding="actions" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="1" column="2" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <clientProperties>
@@ -90,7 +82,7 @@
           </component>
           <component id="2fea8" class="javax.swing.JButton" binding="addFilesToButton">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="30"/>
                 <maximum-size width="200" height="-1"/>
               </grid>
@@ -99,27 +91,27 @@
               <text value="Add your files to the list"/>
             </properties>
           </component>
-          <component id="e659c" class="javax.swing.JButton" binding="addYourSelfButton">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="30"/>
-                <maximum-size width="200" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="Add your self to the list"/>
-            </properties>
-          </component>
           <vspacer id="39dd0">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
+          <component id="62c54" class="javax.swing.JButton" binding="refreshButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="30"/>
+                <maximum-size width="100" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Refresh"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <component id="8454d" class="javax.swing.JButton" binding="chatButton" default-binding="true">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Chat"/>
@@ -127,10 +119,18 @@
       </component>
       <component id="49173" class="javax.swing.JButton" binding="downloadButton" default-binding="true">
         <constraints>
-          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Download"/>
+        </properties>
+      </component>
+      <component id="8f813" class="javax.swing.JLabel" binding="username">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="test"/>
         </properties>
       </component>
     </children>

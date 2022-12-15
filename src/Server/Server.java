@@ -108,10 +108,10 @@ public class Server {
     void removeUser(String userName, userThread aUser) {
         userThreads.remove(aUser);
         users.forEach(user -> {
-            if (user.getUsername() == userName)
+            if (user.getUsername().equals(userName))
                 users.remove(user);
         });
-        System.out.println("The user at " + userName + " has quited");
+        System.out.println("The user " + userName + " has quited");
     }
 
 
