@@ -53,7 +53,7 @@ public class PeerServerThread extends Thread {
         String message = json.getString("message");
         peer.chatGUI.updateChat("[" + username + "]: " + message);
     }
-    private void sendFile(String filename, Socket socket) {
+    private void sendFile(String filename, Socket socket) throws IOException {
         try {
             File file_transfer = new File(this.peer.getFolder() + "/" + filename);
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -64,8 +64,14 @@ public class PeerServerThread extends Thread {
                     .build()
             );
             printWriter.println(stringWriter.toString());
-        } catch (IOException ioe) {
-            return;
+        } catch (Exception e) {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            StringWriter stringWriter = new StringWriter();
+            Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()
+                    .add("file", "fail")
+                    .build()
+            );
+            printWriter.println(stringWriter.toString());
         }
     }
     private String convertFileToString(File file) throws IOException {

@@ -37,7 +37,8 @@ public class PeerThread extends Thread {
         printWriter.println(stringWriter.toString());
         BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         JsonObject file_response = Json.createReader(reader).readObject();
-        if (file_response.containsKey("filename") && file_response.containsKey("file")) {
+        if (file_response.containsKey("filename")  && file_response.containsKey("file") &&
+                !file_response.getString("file").equals("fail")) {
             convertFile(file_response.getString("file"), file_response.getString("filename"));
         }
     }
