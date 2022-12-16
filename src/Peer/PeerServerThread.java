@@ -1,5 +1,7 @@
 package Peer;
 
+import ui.ChatGUI;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -16,6 +18,7 @@ public class PeerServerThread extends Thread {
     private ServerSocket serverSocket;
     private Peer peer;
     private Set<PeerServerSubThread> subThreads = new HashSet<PeerServerSubThread>();
+    private ChatGUI chatGUI;
     public PeerServerThread(String portNumb, Peer peer) throws IOException {
         serverSocket = new ServerSocket(Integer.valueOf(portNumb));
         this.peer = peer;
@@ -48,7 +51,7 @@ public class PeerServerThread extends Thread {
     private void printMessage(JsonObject json) {
         String username = json.getString("username");
         String message = json.getString("message");
-        System.out.println("[" + username + "]:" + message);
+        peer.chatGUI.updateChat("[" + username + "]: " + message);
     }
     private void sendFile(String filename, Socket socket) {
         try {

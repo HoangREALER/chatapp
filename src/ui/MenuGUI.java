@@ -131,9 +131,11 @@ public class MenuGUI extends JFrame {
                             "Please choose someone to talk to bro",
                             "Warning",
                             JOptionPane.WARNING_MESSAGE);
-//                else {
-//
-//                }
+                else {
+                    MenuGUI.super.dispose();
+                    String[] users = toChat.toArray(String[]::new);
+                    new ChatGUI(peer, users);
+                }
             }
         });
         downloadButton.addActionListener(new ActionListener() {
@@ -162,7 +164,7 @@ public class MenuGUI extends JFrame {
                             try {
                                 socket = new Socket(address[0], Integer.valueOf(address[1]));
                                 PeerThread requestThread = new PeerThread(socket, username.getText(), peer);
-                                downloadRequest(file_peer[0], requestThread);
+                                downloadRequest(filename, requestThread);
                                 requestThread.closeEverything();
                             } catch (IOException ex) {
                                 if (socket != null) {

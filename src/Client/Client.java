@@ -103,6 +103,24 @@ public class Client {
         }
         return this.response;
     }
+
+    public  String getUserInfo(String username) {
+        try {
+            JsonObject jsonObject = Json.createObjectBuilder()
+                    .add("request", "info")
+                    .add("type", "user")
+                    .add("username", username)
+                    .build();
+            ClientThread ct = new ClientThread(this.socket);
+            ct.start();
+            ct.sendJSON(jsonObject);
+            ct.join();
+            response = ct.getResponse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.response;
+    }
 }
 
 

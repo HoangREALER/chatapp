@@ -65,7 +65,6 @@ public class userThread extends Thread {
                                                     .add("peer_id", peer_id)
                                                     .add("port", user.getPort())
                                                     .add("host", user.getHost())
-                                                    .build()
                                             );
                                         }
                                     });
@@ -90,14 +89,13 @@ public class userThread extends Thread {
                         JsonObjectBuilder infoJson = Json.createObjectBuilder();
                         switch (json.getString("type")) {
                             case "user":
-                                if (json.containsKey("peer_id")) {
-                                    int id = json.getInt("peer_id");
+                                if (json.containsKey("username")) {
+                                    String id = json.getString("username");
                                     users.forEach(user -> {
-                                        if (user.getId() == id)
+                                        if (user.getUsername().equals(id))
                                             infoJson.add("username", user.getUsername())
                                                     .add("host", user.getHost())
-                                                    .add("port", user.getPort())
-                                                    .build();
+                                                    .add("port", user.getPort());
                                     });
                                 }
                                 Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()
