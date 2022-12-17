@@ -159,7 +159,7 @@ public class MenuGUI extends JFrame {
                                     JOptionPane.ERROR_MESSAGE);
                         else {
 
-                            String address[] = file_peer[1].split("/")[1].split(":");
+                            String address[] = file_peer[1].split("/")[1].split(",\\s*")[0].split(":");
                             Socket socket = null;
                             try {
                                 socket = new Socket(address[0], Integer.valueOf(address[1]));
