@@ -17,6 +17,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 class RoundedCornerBorder extends AbstractBorder {
@@ -135,7 +137,9 @@ public class LoginGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (validateport(port.getText()) && validateUsername(username.getText())) {
-                        Peer peer = new Peer(username.getText(), port.getText(), "/Users/hoang/IdeaProjects/ChatAppAssignment1/testfolder/peer2");
+                        Path currentRelativePath = Paths.get("chatAppFolder");
+                        String s = currentRelativePath.toAbsolutePath().toString();
+                        Peer peer = new Peer(username.getText(), port.getText(), s);
                         peer.clientAddUser();
                         jframe.dispose();
                         new MenuGUI(peer);
